@@ -32,7 +32,7 @@ plt.title("Distribucion de estudiantes por medio de transporte")
 plt.tight_layout()
 plt.show()
 
-#Grafico de barras agurpadas
+#Grafico de barras agrupadas
 #Se aplica cuando hice cruces en el dataFrame
 
 conteoEstadoMedioTransporte=dataFrameAsistencia.groupby(['estado','medio_transporte']).size().unstack(fill_value=0)
@@ -48,3 +48,42 @@ plt.ylabel("Cantidad de registros")
 plt.legend(title="Medio de transporte")
 plt.tight_layout()
 plt.show()
+
+#GRAFICAS PARA EL PROYECTO INTEGRADOR
+
+
+# Conteo de registros por estado y fecha
+dataFrameAsistencia['fecha'] = pd.to_datetime(dataFrameAsistencia['fecha'])
+
+conteo_por_fecha = dataFrameAsistencia.groupby(['fecha', 'estado']).size().reset_index(name='cantidad')
+
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=conteo_por_fecha, x='fecha', y='cantidad', hue='estado', palette=colors)
+plt.title("Asistencia diaria por estado")
+plt.xlabel("Fecha")
+plt.ylabel("Cantidad de registros")
+plt.tight_layout()
+plt.show()
+
+#Distribución de estudiantes por estrato
+conteoEstrato = dataFrameAsistencia["estrato"].value_counts().sort_index()
+
+plt.figure(figsize=(7, 5))
+sns.barplot(x=conteoEstrato.index.astype(str), y=conteoEstrato.values, palette="pastel")
+plt.title("Distribución de registros por estrato")
+plt.xlabel("Estrato socioeconómico")
+plt.ylabel("Cantidad de registros")
+plt.tight_layout()
+plt.show()
+
+#Matriz de asistencia cruzando grupo y estado
+grupo_estado = dataFrameAsistencia.groupby(['id_grupo', 'estado']).size().unstack(fill_value=0)
+
+plt.figure(figsize=(10, 6))
+sns.heatmap(grupo_estado, annot=True, fmt='d', cmap='YlGnBu')
+plt.title("Cantidad de registros por grupo y estado de asistencia")
+plt.xlabel("Estado de asistencia")
+plt.ylabel("ID del grupo")
+plt.tight_layout()
+plt.show()
+
